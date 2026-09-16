@@ -1,0 +1,490 @@
+.app {
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+.yatra-root {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 680px;
+  overflow: hidden;
+
+  background:
+    radial-gradient(
+      circle at 50% 42%,
+      rgba(18, 72, 100, 0.34),
+      transparent 42%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(0, 217, 255, 0.08),
+      transparent 30%
+    ),
+    linear-gradient(
+      145deg,
+      #041019 0%,
+      #071a28 48%,
+      #031018 100%
+    );
+
+  color: white;
+}
+
+/* HEADER */
+
+.yatra-header {
+  position: absolute;
+  z-index: 20;
+  top: 26px;
+  left: 34px;
+  right: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.yatra-logo {
+  font-size: 22px;
+  font-weight: 900;
+  letter-spacing: 3px;
+}
+
+.yatra-logo span {
+  color: #00d9ff;
+}
+
+/* HEADING */
+
+.yatra-heading {
+  position: absolute;
+  z-index: 10;
+
+  left: 48px;
+  top: 120px;
+
+  pointer-events: none;
+}
+
+.eyebrow {
+  margin-bottom: 10px;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 4px;
+
+  color: #00d9ff;
+}
+
+.yatra-heading h1 {
+  margin: 0;
+
+  font-size: clamp(42px, 5vw, 76px);
+  line-height: 0.95;
+  letter-spacing: -3px;
+
+  font-weight: 900;
+}
+
+.yatra-heading h1 span {
+  color: #fdd01b;
+}
+
+.yatra-heading p {
+  margin-top: 20px;
+
+  color: rgba(255, 255, 255, 0.62);
+
+  font-size: 13px;
+  letter-spacing: 0.5px;
+}
+
+.ap-heading h1 span {
+  color: #f47395;
+}
+
+/* MAP */
+
+.map-container {
+  position: absolute;
+
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+}
+
+.map-container canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+/* STATUS */
+
+.map-status {
+  position: absolute;
+  z-index: 30;
+
+  left: 50%;
+  top: 50%;
+
+  transform: translate(-50%, -50%);
+
+  padding: 16px 22px;
+
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+
+  background: rgba(4, 16, 25, 0.78);
+  backdrop-filter: blur(16px);
+
+  color: white;
+}
+
+.map-status.error {
+  color: #ff8e9f;
+}
+
+/* STATE LABEL */
+
+.state-label {
+  padding: 3px 6px;
+
+  color: #1a1a1a;
+
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.7px;
+
+  text-shadow:
+    0 1px 0 rgba(255, 255, 255, 0.55);
+
+  transform: translateZ(0);
+}
+
+/* DESTINATION LABEL */
+
+.destination-label {
+  padding: 3px 6px;
+
+  border-radius: 5px;
+
+  background: rgba(4, 12, 18, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  color: white;
+
+  font-size: 8px;
+  font-weight: 800;
+
+  backdrop-filter: blur(8px);
+}
+
+/* BACK BUTTON */
+
+.back-button {
+  pointer-events: auto;
+
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 999px;
+
+  padding: 9px 16px;
+
+  background: rgba(5, 20, 30, 0.75);
+  color: white;
+
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(12px);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.back-button:hover {
+  transform: translateY(-2px);
+  background: rgba(0, 217, 255, 0.14);
+}
+
+/* BOTTOM HINT */
+
+.map-hint {
+  position: absolute;
+  z-index: 15;
+
+  left: 50%;
+  bottom: 28px;
+
+  transform: translateX(-50%);
+
+  padding: 9px 15px;
+
+  border-radius: 999px;
+
+  background: rgba(3, 15, 23, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  color: rgba(255, 255, 255, 0.5);
+
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2px;
+
+  backdrop-filter: blur(12px);
+}
+
+/* =========================================================
+   DESTINATION MODAL
+   ========================================================= */
+
+.destination-overlay {
+  position: absolute;
+  z-index: 100;
+
+  inset: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 30px;
+
+  background: rgba(0, 8, 14, 0.66);
+  backdrop-filter: blur(12px);
+}
+
+.destination-modal {
+  position: relative;
+
+  width: min(980px, 92vw);
+  min-height: 510px;
+
+  display: grid;
+  grid-template-columns: 1.05fr 1fr;
+
+  overflow: hidden;
+
+  border-radius: 28px;
+
+  border: 1px solid rgba(255, 255, 255, 0.14);
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(14, 35, 48, 0.97),
+      rgba(4, 17, 25, 0.98)
+    );
+
+  box-shadow:
+    0 35px 100px rgba(0, 0, 0, 0.65);
+}
+
+/* CLOSE */
+
+.close-button {
+  position: absolute;
+  z-index: 10;
+
+  right: 18px;
+  top: 16px;
+
+  width: 38px;
+  height: 38px;
+
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 50%;
+
+  background: rgba(0, 0, 0, 0.35);
+
+  color: white;
+
+  font-size: 24px;
+  line-height: 1;
+
+  cursor: pointer;
+}
+
+/* IMAGE AREA */
+
+.destination-image-area {
+  min-height: 510px;
+
+  padding: 22px;
+}
+
+.destination-image-placeholder {
+  width: 100%;
+  height: 100%;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 20px;
+
+  background:
+    radial-gradient(
+      circle at 50% 40%,
+      rgba(244, 115, 149, 0.25),
+      transparent 38%
+    ),
+    linear-gradient(
+      145deg,
+      #16394c,
+      #071721
+    );
+
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  color: white;
+
+  font-size: 26px;
+}
+
+.destination-image-icon {
+  margin-bottom: 14px;
+
+  font-size: 60px;
+}
+
+/* INFO */
+
+.destination-info {
+  padding: 60px 46px 40px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.destination-kicker {
+  margin-bottom: 8px;
+
+  color: #00d9ff;
+
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 3px;
+}
+
+.destination-info h2 {
+  margin: 0 0 28px;
+
+  font-size: 44px;
+  line-height: 1;
+
+  letter-spacing: -1.5px;
+}
+
+/* DETAILS */
+
+.detail-list {
+  display: flex;
+  flex-direction: column;
+  gap: 13px;
+}
+
+.detail-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  gap: 20px;
+
+  padding-bottom: 12px;
+
+  border-bottom: 1px solid
+    rgba(255, 255, 255, 0.08);
+
+  color: rgba(255, 255, 255, 0.65);
+
+  font-size: 13px;
+}
+
+.detail-row strong {
+  color: white;
+  text-align: right;
+}
+
+/* TOTAL */
+
+.total-expense {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-top: 24px;
+  padding: 15px 18px;
+
+  border-radius: 14px;
+
+  background: rgba(244, 115, 149, 0.09);
+
+  border: 1px solid
+    rgba(244, 115, 149, 0.18);
+
+  color: rgba(255, 255, 255, 0.65);
+
+  font-size: 12px;
+}
+
+.total-expense strong {
+  color: #f47395;
+  font-size: 15px;
+}
+
+/* MOBILE */
+
+@media (max-width: 800px) {
+  .yatra-heading {
+    left: 22px;
+    top: 92px;
+  }
+
+  .yatra-heading h1 {
+    font-size: 42px;
+  }
+
+  .yatra-heading p {
+    font-size: 11px;
+  }
+
+  .yatra-header {
+    left: 20px;
+    right: 20px;
+    top: 20px;
+  }
+
+  .destination-modal {
+    grid-template-columns: 1fr;
+    max-height: 90vh;
+    overflow-y: auto;
+  }
+
+  .destination-image-area {
+    min-height: 280px;
+  }
+
+  .destination-info {
+    padding: 25px;
+  }
+
+  .destination-info h2 {
+    font-size: 34px;
+  }
+
+  .map-hint {
+    bottom: 15px;
+    font-size: 8px;
+    letter-spacing: 1px;
+  }
+}
