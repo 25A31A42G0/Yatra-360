@@ -1,208 +1,466 @@
-.app {
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
   width: 100%;
-  min-height: 100vh;
+  height: 100%;
   margin: 0;
   padding: 0;
 }
 
+body {
+  overflow: hidden;
+
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+/* =========================================================
+   MAIN PAGE
+========================================================= */
+
 .yatra-root {
   position: relative;
+
   width: 100%;
   height: 100vh;
   min-height: 680px;
+
   overflow: hidden;
+
+  /*
+    WHITE UPPER AREA
+    BLUE OCEAN LOWER AREA
+  */
+
+  background:
+    linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #ffffff 43%,
+      #fafdfe 48%,
+      #e7f7fa 54%,
+      #b7e2ed 64%,
+      #82cadd 78%,
+      #61b4ce 100%
+    );
+
+  color: #182b33;
+}
+
+/* =========================================================
+   OCEAN
+========================================================= */
+
+.ocean-layer {
+  position: absolute;
+
+  z-index: 0;
+
+  left: -12%;
+  right: -12%;
+
+  bottom: -8%;
+
+  height: 57%;
 
   background:
     radial-gradient(
-      circle at 50% 42%,
-      rgba(18, 72, 100, 0.34),
-      transparent 42%
-    ),
-    radial-gradient(
-      circle at 80% 20%,
-      rgba(0, 217, 255, 0.08),
-      transparent 30%
+      ellipse at 50% 0%,
+      rgba(
+        255,
+        255,
+        255,
+        0.9
+      ) 0%,
+      rgba(
+        255,
+        255,
+        255,
+        0
+      ) 27%
     ),
     linear-gradient(
-      145deg,
-      #041019 0%,
-      #071a28 48%,
-      #031018 100%
+      180deg,
+      #e0f6fa 0%,
+      #b4e1ec 25%,
+      #80c8dc 55%,
+      #5eb4cf 100%
     );
 
-  color: white;
+  /*
+    Curved ocean boundary.
+  */
+
+  border-radius:
+    50% 50% 0 0 /
+    16% 16% 0 0;
+
+  pointer-events: none;
+
+  opacity: 1;
 }
 
-/* HEADER */
+/* =========================================================
+   CANVAS
+========================================================= */
 
-.yatra-header {
+.yatra-root canvas {
+  position: absolute !important;
+
+  z-index: 2;
+
+  inset: 0;
+
+  width: 100% !important;
+  height: 100% !important;
+
+  /*
+    Transparent canvas.
+    This is VERY IMPORTANT because the ocean
+    must remain visible behind the 3D map.
+  */
+
+  background: transparent !important;
+
+  cursor: grab;
+}
+
+.yatra-root canvas:active {
+  cursor: grabbing;
+}
+
+/* =========================================================
+   OCEAN TEXT
+========================================================= */
+
+.ocean-name {
   position: absolute;
-  z-index: 20;
-  top: 26px;
-  left: 34px;
-  right: 34px;
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  color: rgba(
+    25,
+    91,
+    109,
+    0.42
+  );
+
+  font-family:
+    Georgia,
+    "Times New Roman",
+    serif;
+
+  font-size: 11px;
+
+  font-weight: 700;
+
+  letter-spacing: 2px;
+
+  font-style: italic;
 }
 
-.yatra-logo {
-  font-size: 22px;
-  font-weight: 900;
-  letter-spacing: 3px;
+.ocean-indian {
+  left: 35%;
+
+  bottom: 10%;
 }
 
-.yatra-logo span {
-  color: #00d9ff;
+.ocean-bay {
+  right: 19%;
+
+  bottom: 24%;
 }
 
-/* HEADING */
+/* =========================================================
+   OCEAN WAVES
+========================================================= */
+
+.ocean-wave {
+  position: absolute;
+
+  height: 1px;
+
+  background: rgba(
+    255,
+    255,
+    255,
+    0.55
+  );
+
+  border-radius: 50%;
+}
+
+.wave-one {
+  left: 8%;
+
+  bottom: 20%;
+
+  width: 180px;
+}
+
+.wave-two {
+  right: 8%;
+
+  bottom: 32%;
+
+  width: 220px;
+}
+
+.wave-three {
+  left: 45%;
+
+  bottom: 7%;
+
+  width: 260px;
+}
+
+/* =========================================================
+   YATRA 360 — LEFT SIDE
+========================================================= */
 
 .yatra-heading {
   position: absolute;
-  z-index: 10;
 
-  left: 48px;
-  top: 120px;
+  z-index: 20;
+
+  top: 50%;
+
+  left: 38px;
+
+  transform:
+    translateY(-50%);
+
+  width: 330px;
+
+  text-align: left;
 
   pointer-events: none;
 }
 
+/* =========================================================
+   EYEBROW
+========================================================= */
+
 .eyebrow {
-  margin-bottom: 10px;
+  margin-bottom: 12px;
 
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 4px;
+  color: #d8232a;
 
-  color: #00d9ff;
+  font-size: 10px;
+
+  font-weight: 900;
+
+  letter-spacing: 3px;
+
+  text-transform: uppercase;
 }
+
+/* =========================================================
+   YATRA SCRIPT FONT
+========================================================= */
 
 .yatra-heading h1 {
   margin: 0;
 
-  font-size: clamp(42px, 5vw, 76px);
-  line-height: 0.95;
-  letter-spacing: -3px;
+  font-family:
+    "Brush Script MT",
+    "Segoe Script",
+    "Lucida Handwriting",
+    cursive;
 
-  font-weight: 900;
-}
+  font-size: clamp(
+    58px,
+    6vw,
+    88px
+  );
 
-.yatra-heading h1 span {
-  color: #fdd01b;
+  line-height: 0.85;
+
+  letter-spacing: 1px;
+
+  font-weight: 700;
+
+  color: #15323c;
+
+  text-shadow:
+    0 3px 0
+      rgba(
+        255,
+        255,
+        255,
+        0.95
+      ),
+    0 8px 20px
+      rgba(
+        20,
+        70,
+        85,
+        0.18
+      );
 }
 
 .yatra-heading p {
-  margin-top: 20px;
+  margin: 18px 0 0;
 
-  color: rgba(255, 255, 255, 0.62);
+  color: #46626b;
 
   font-size: 13px;
-  letter-spacing: 0.5px;
+
+  line-height: 1.55;
+
+  font-weight: 700;
+
+  letter-spacing: 0.3px;
 }
 
-.ap-heading h1 span {
-  color: #f47395;
-}
-
-/* MAP */
-
-.map-container {
-  position: absolute;
-
-  inset: 0;
-
-  width: 100%;
-  height: 100%;
-}
-
-.map-container canvas {
-  width: 100% !important;
-  height: 100% !important;
-}
-
-/* STATUS */
-
-.map-status {
-  position: absolute;
-  z-index: 30;
-
-  left: 50%;
-  top: 50%;
-
-  transform: translate(-50%, -50%);
-
-  padding: 16px 22px;
-
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px;
-
-  background: rgba(4, 16, 25, 0.78);
-  backdrop-filter: blur(16px);
-
-  color: white;
-}
-
-.map-status.error {
-  color: #ff8e9f;
-}
-
-/* STATE LABEL */
+/* =========================================================
+   STATE NAMES
+   NO WHITE BOX
+========================================================= */
 
 .state-label {
-  padding: 3px 6px;
+  padding: 0;
+
+  background: transparent;
+
+  border: none;
 
   color: #1a1a1a;
 
-  font-size: 8px;
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
+
+  font-size: 7px;
+
+  line-height: 1;
+
   font-weight: 900;
-  letter-spacing: 0.7px;
+
+  letter-spacing: 0.35px;
+
+  text-transform: uppercase;
+
+  white-space: nowrap;
+
+  text-align: center;
+
+  /*
+    Thin white outline only.
+    NO WHITE RECTANGLE.
+  */
 
   text-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.55);
+    1px 1px 0 #ffffff,
+    -1px -1px 0 #ffffff,
+    1px -1px 0 #ffffff,
+    -1px 1px 0 #ffffff;
 
-  transform: translateZ(0);
+  pointer-events: none;
+
+  user-select: none;
 }
 
-/* DESTINATION LABEL */
+/* =========================================================
+   AP DESTINATION LABELS
+========================================================= */
 
 .destination-label {
-  padding: 3px 6px;
+  padding: 0;
 
-  border-radius: 5px;
+  background: transparent;
 
-  background: rgba(4, 12, 18, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: none;
 
-  color: white;
+  color: #1a1a1a;
 
-  font-size: 8px;
-  font-weight: 800;
+  font-family:
+    Arial,
+    Helvetica,
+    sans-serif;
 
-  backdrop-filter: blur(8px);
+  font-size: 9px;
+
+  line-height: 1;
+
+  font-weight: 950;
+
+  letter-spacing: 0.25px;
+
+  text-transform: uppercase;
+
+  white-space: nowrap;
+
+  text-shadow:
+    1px 1px 0 #ffffff,
+    -1px -1px 0 #ffffff,
+    1px -1px 0 #ffffff,
+    -1px 1px 0 #ffffff;
+
+  pointer-events: none;
 }
 
-/* BACK BUTTON */
+/* =========================================================
+   BACK BUTTON
+========================================================= */
 
 .back-button {
-  pointer-events: auto;
+  position: absolute;
 
-  border: 1px solid rgba(255, 255, 255, 0.16);
-  border-radius: 999px;
+  z-index: 40;
 
-  padding: 9px 16px;
+  top: 30px;
 
-  background: rgba(5, 20, 30, 0.75);
-  color: white;
+  left: 30px;
+
+  padding: 12px 18px;
+
+  border: 1px solid
+    rgba(
+      80,
+      150,
+      170,
+      0.25
+    );
+
+  border-radius: 12px;
+
+  background: rgba(
+    255,
+    255,
+    255,
+    0.88
+  );
+
+  color: #17313a;
 
   font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 1px;
+
+  font-weight: 900;
+
+  letter-spacing: 0.7px;
 
   cursor: pointer;
 
-  backdrop-filter: blur(12px);
+  backdrop-filter: blur(14px);
+
+  box-shadow:
+    0 8px 25px
+      rgba(
+        0,
+        70,
+        90,
+        0.12
+      );
 
   transition:
     transform 0.2s ease,
@@ -210,281 +468,478 @@
 }
 
 .back-button:hover {
-  transform: translateY(-2px);
-  background: rgba(0, 217, 255, 0.14);
-}
+  transform:
+    translateY(-2px);
 
-/* BOTTOM HINT */
-
-.map-hint {
-  position: absolute;
-  z-index: 15;
-
-  left: 50%;
-  bottom: 28px;
-
-  transform: translateX(-50%);
-
-  padding: 9px 15px;
-
-  border-radius: 999px;
-
-  background: rgba(3, 15, 23, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-
-  color: rgba(255, 255, 255, 0.5);
-
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 2px;
-
-  backdrop-filter: blur(12px);
+  background: #ffffff;
 }
 
 /* =========================================================
-   DESTINATION MODAL
-   ========================================================= */
+   MAP HINT — LEFT SIDE
+========================================================= */
+
+.map-hint {
+  position: absolute;
+
+  z-index: 25;
+
+  left: 38px;
+
+  bottom: 30px;
+
+  width: 300px;
+
+  min-width: 0;
+
+  padding: 13px 18px;
+
+  text-align: left;
+
+  background: rgba(
+    255,
+    255,
+    255,
+    0.88
+  );
+
+  border: 1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.95
+    );
+
+  border-radius: 13px;
+
+  backdrop-filter: blur(14px);
+
+  box-shadow:
+    0 10px 30px
+      rgba(
+        0,
+        70,
+        90,
+        0.13
+      );
+
+  pointer-events: none;
+}
+
+.map-hint span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #d8232a;
+
+  font-size: 10px;
+
+  font-weight: 950;
+
+  letter-spacing: 2px;
+}
+
+.map-hint p {
+  margin: 0;
+
+  color: #304b55;
+
+  font-size: 10px;
+
+  line-height: 1.4;
+
+  font-weight: 700;
+}
+
+/* =========================================================
+   DESTINATION OVERLAY
+========================================================= */
 
 .destination-overlay {
   position: absolute;
+
   z-index: 100;
 
   inset: 0;
 
   display: flex;
+
   align-items: center;
+
   justify-content: center;
 
   padding: 30px;
 
-  background: rgba(0, 8, 14, 0.66);
-  backdrop-filter: blur(12px);
+  background: rgba(
+    10,
+    36,
+    44,
+    0.32
+  );
+
+  backdrop-filter: blur(8px);
 }
 
-.destination-modal {
+/* =========================================================
+   DESTINATION CARD
+========================================================= */
+
+.destination-card {
   position: relative;
 
-  width: min(980px, 92vw);
-  min-height: 510px;
+  width: min(
+    920px,
+    94vw
+  );
 
-  display: grid;
-  grid-template-columns: 1.05fr 1fr;
+  max-height: 90vh;
 
   overflow: hidden;
 
-  border-radius: 28px;
+  display: grid;
 
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  grid-template-columns:
+    minmax(300px, 1fr)
+    minmax(360px, 1fr);
 
-  background:
-    linear-gradient(
-      135deg,
-      rgba(14, 35, 48, 0.97),
-      rgba(4, 17, 25, 0.98)
+  background: #ffffff;
+
+  border: 1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.95
     );
+
+  border-radius: 24px;
 
   box-shadow:
-    0 35px 100px rgba(0, 0, 0, 0.65);
+    0 35px 90px
+      rgba(
+        0,
+        0,
+        0,
+        0.3
+      );
 }
 
-/* CLOSE */
-
-.close-button {
-  position: absolute;
-  z-index: 10;
-
-  right: 18px;
-  top: 16px;
-
-  width: 38px;
-  height: 38px;
-
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  border-radius: 50%;
-
-  background: rgba(0, 0, 0, 0.35);
-
-  color: white;
-
-  font-size: 24px;
-  line-height: 1;
-
-  cursor: pointer;
-}
-
-/* IMAGE AREA */
-
-.destination-image-area {
-  min-height: 510px;
-
-  padding: 22px;
-}
-
-.destination-image-placeholder {
+.destination-image {
   width: 100%;
+
   height: 100%;
 
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  min-height: 460px;
 
-  border-radius: 20px;
+  display: block;
 
-  background:
-    radial-gradient(
-      circle at 50% 40%,
-      rgba(244, 115, 149, 0.25),
-      transparent 38%
-    ),
-    linear-gradient(
-      145deg,
-      #16394c,
-      #071721
-    );
-
-  border: 1px solid rgba(255, 255, 255, 0.08);
-
-  color: white;
-
-  font-size: 26px;
+  object-fit: cover;
 }
 
-.destination-image-icon {
-  margin-bottom: 14px;
+.destination-content {
+  position: relative;
 
-  font-size: 60px;
+  padding: 38px;
+
+  overflow-y: auto;
 }
 
-/* INFO */
-
-.destination-info {
-  padding: 60px 46px 40px;
-
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-
-.destination-kicker {
-  margin-bottom: 8px;
-
-  color: #00d9ff;
+.destination-eyebrow {
+  color: #d8232a;
 
   font-size: 10px;
+
   font-weight: 900;
-  letter-spacing: 3px;
+
+  letter-spacing: 2px;
 }
 
-.destination-info h2 {
-  margin: 0 0 28px;
+.destination-content h2 {
+  margin: 9px 0 2px;
 
-  font-size: 44px;
+  color: #172d35;
+
+  font-size: 42px;
+
   line-height: 1;
+
+  font-weight: 950;
 
   letter-spacing: -1.5px;
 }
 
-/* DETAILS */
+.destination-district {
+  margin: 0 0 28px;
 
-.detail-list {
-  display: flex;
-  flex-direction: column;
-  gap: 13px;
-}
-
-.detail-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-
-  gap: 20px;
-
-  padding-bottom: 12px;
-
-  border-bottom: 1px solid
-    rgba(255, 255, 255, 0.08);
-
-  color: rgba(255, 255, 255, 0.65);
+  color: #71838a;
 
   font-size: 13px;
+
+  font-weight: 700;
 }
 
-.detail-row strong {
-  color: white;
-  text-align: right;
+/* =========================================================
+   DESTINATION INFO GRID
+========================================================= */
+
+.destination-info-grid {
+  display: grid;
+
+  grid-template-columns:
+    1fr 1fr;
+
+  gap: 12px;
+
+  margin-bottom: 18px;
 }
 
-/* TOTAL */
+.destination-info-grid > div {
+  padding: 15px;
 
-.total-expense {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+  background: #f1f8fa;
 
-  margin-top: 24px;
-  padding: 15px 18px;
+  border: 1px solid
+    #dfedf1;
+
+  border-radius: 13px;
+}
+
+.destination-info-grid span {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #71848b;
+
+  font-size: 9px;
+
+  font-weight: 900;
+
+  letter-spacing: 1px;
+}
+
+.destination-info-grid strong {
+  display: block;
+
+  color: #19323b;
+
+  font-size: 12px;
+
+  line-height: 1.4;
+}
+
+/* =========================================================
+   WHY VISIT
+========================================================= */
+
+.visit-box {
+  padding: 18px;
+
+  margin-bottom: 14px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #fff1f3,
+      #effafd
+    );
 
   border-radius: 14px;
 
-  background: rgba(244, 115, 149, 0.09);
-
   border: 1px solid
-    rgba(244, 115, 149, 0.18);
+    #f0dfe1;
+}
 
-  color: rgba(255, 255, 255, 0.65);
+.visit-box span {
+  color: #d8232a;
 
-  font-size: 12px;
+  font-size: 9px;
+
+  font-weight: 900;
+
+  letter-spacing: 1px;
+}
+
+.visit-box p {
+  margin: 8px 0 0;
+
+  color: #344c54;
+
+  font-size: 13px;
+
+  line-height: 1.55;
+
+  font-weight: 600;
+}
+
+/* =========================================================
+   TOTAL EXPENSE
+========================================================= */
+
+.total-expense {
+  display: flex;
+
+  align-items: center;
+
+  justify-content: space-between;
+
+  padding: 16px 18px;
+
+  border-radius: 14px;
+
+  background: #172f38;
+
+  color: #ffffff;
+}
+
+.total-expense span {
+  font-size: 9px;
+
+  font-weight: 900;
+
+  letter-spacing: 1px;
 }
 
 .total-expense strong {
-  color: #f47395;
+  color: #ffffff;
+
   font-size: 15px;
 }
 
-/* MOBILE */
+/* =========================================================
+   CLOSE BUTTON
+========================================================= */
 
-@media (max-width: 800px) {
+.close-button {
+  position: absolute;
+
+  z-index: 10;
+
+  top: 14px;
+
+  right: 14px;
+
+  width: 38px;
+
+  height: 38px;
+
+  display: flex;
+
+  align-items: center;
+
+  justify-content: center;
+
+  border: 1px solid
+    rgba(
+      255,
+      255,
+      255,
+      0.8
+    );
+
+  border-radius: 50%;
+
+  background: rgba(
+    20,
+    30,
+    34,
+    0.7
+  );
+
+  color: #ffffff;
+
+  font-size: 25px;
+
+  cursor: pointer;
+
+  backdrop-filter: blur(8px);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.close-button:hover {
+  transform:
+    rotate(90deg);
+
+  background: #d8232a;
+}
+
+/* =========================================================
+   RESPONSIVE
+========================================================= */
+
+@media (max-width: 900px) {
   .yatra-heading {
-    left: 22px;
-    top: 92px;
+    top: 30px;
+
+    left: 50%;
+
+    transform:
+      translateX(-50%);
+
+    width: max-content;
+
+    text-align: center;
   }
 
   .yatra-heading h1 {
-    font-size: 42px;
+    font-size: 55px;
   }
 
-  .yatra-heading p {
-    font-size: 11px;
-  }
-
-  .yatra-header {
-    left: 20px;
-    right: 20px;
-    top: 20px;
-  }
-
-  .destination-modal {
+  .destination-card {
     grid-template-columns: 1fr;
-    max-height: 90vh;
-    overflow-y: auto;
   }
 
-  .destination-image-area {
-    min-height: 280px;
+  .destination-image {
+    height: 250px;
+
+    min-height: 250px;
+  }
+}
+
+@media (max-width: 560px) {
+  .yatra-heading h1 {
+    font-size: 45px;
   }
 
-  .destination-info {
-    padding: 25px;
+  .yatra-heading {
+    top: 25px;
   }
 
-  .destination-info h2 {
-    font-size: 34px;
+  .eyebrow {
+    font-size: 8px;
+  }
+
+  .back-button {
+    top: 18px;
+
+    left: 18px;
   }
 
   .map-hint {
-    bottom: 15px;
-    font-size: 8px;
-    letter-spacing: 1px;
+    left: 18px;
+
+    bottom: 18px;
+
+    width: 260px;
+  }
+
+  .destination-overlay {
+    padding: 15px;
+  }
+
+  .destination-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .destination-content {
+    padding: 22px;
+  }
+
+  .destination-content h2 {
+    font-size: 32px;
   }
 }

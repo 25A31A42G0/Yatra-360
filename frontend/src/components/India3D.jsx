@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useState } from "react";
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls, Html } from "@react-three/drei";
+import { useEffect, useMemo, useState } from "react";
 import * as THREE from "three";
+import { Canvas } from "@react-three/fiber";
+import { Html, OrbitControls } from "@react-three/drei";
 
 /* =========================================================
-   EXACT COLOURS GIVEN BY YOU
-   ========================================================= */
+   STATE COLORS
+========================================================= */
 
 const STATE_COLORS = {
   Rajasthan: "#FDD01B",
@@ -39,242 +39,200 @@ const STATE_COLORS = {
 };
 
 /* =========================================================
-   CAPITAL DOTS
-   ========================================================= */
+   CAPITALS
+========================================================= */
 
-const CAPITALS = [
-  ["Jaipur", 26.9124, 75.7873, "Rajasthan"],
-  ["Mumbai", 19.076, 72.8777, "Maharashtra"],
-  ["Gandhinagar", 23.2156, 72.6369, "Gujarat"],
-  ["Bhopal", 23.2599, 77.4126, "Madhya Pradesh"],
-  ["Hyderabad", 17.385, 78.4867, "Telangana"],
-  ["Amaravati", 16.5745, 80.358, "Andhra Pradesh"],
-  ["Bengaluru", 12.9716, 77.5946, "Karnataka"],
-  ["Chennai", 13.0827, 80.2707, "Tamil Nadu"],
-  ["Thiruvananthapuram", 8.5241, 76.9366, "Kerala"],
-  ["Lucknow", 26.8467, 80.9462, "Uttar Pradesh"],
-  ["Patna", 25.5941, 85.1376, "Bihar"],
-  ["Kolkata", 22.5726, 88.3639, "West Bengal"],
-  ["Bhubaneswar", 20.2961, 85.8245, "Odisha"],
-  ["Raipur", 21.2514, 81.6296, "Chhattisgarh"],
-  ["Chandigarh", 30.7333, 76.7794, "Punjab"],
-  ["Chandigarh", 30.7333, 76.7794, "Haryana"],
-  ["Shimla", 31.1048, 77.1734, "Himachal Pradesh"],
-  ["Dehradun", 30.3165, 78.0322, "Uttarakhand"],
-  ["Srinagar", 34.0837, 74.7973, "Jammu & Kashmir"],
-  ["Leh", 34.1526, 77.5771, "Ladakh"],
-  ["Dispur", 26.1445, 91.7362, "Assam"],
-  ["Itanagar", 27.0844, 93.6053, "Arunachal Pradesh"],
-  ["Shillong", 25.5788, 91.8933, "Meghalaya"],
-  ["Kohima", 25.6751, 94.1086, "Nagaland"],
-  ["Imphal", 24.817, 93.9368, "Manipur"],
-  ["Aizawl", 23.7271, 92.7176, "Mizoram"],
-  ["Agartala", 23.8315, 91.2868, "Tripura"],
-  ["Gangtok", 27.3389, 88.6065, "Sikkim"],
-];
+const CAPITALS = {
+  Rajasthan: ["Jaipur", 75.7873, 26.9124],
+  Maharashtra: ["Mumbai", 72.8777, 19.076],
+  Gujarat: ["Gandhinagar", 72.6369, 23.2156],
+  "Madhya Pradesh": ["Bhopal", 77.4126, 23.2599],
+  Telangana: ["Hyderabad", 78.4867, 17.385],
+  "Andhra Pradesh": ["Amaravati", 80.518, 16.5131],
+  Karnataka: ["Bengaluru", 77.5946, 12.9716],
+  "Tamil Nadu": ["Chennai", 80.2707, 13.0827],
+  Kerala: ["Thiruvananthapuram", 76.9366, 8.5241],
+  "Uttar Pradesh": ["Lucknow", 80.9462, 26.8467],
+  Bihar: ["Patna", 85.1376, 25.5941],
+  "West Bengal": ["Kolkata", 88.3639, 22.5726],
+  Odisha: ["Bhubaneswar", 85.8245, 20.2961],
+  Chhattisgarh: ["Raipur", 81.6296, 21.2514],
+  Punjab: ["Chandigarh", 76.7794, 30.7333],
+  Haryana: ["Chandigarh", 76.7794, 30.7333],
+  "Himachal Pradesh": ["Shimla", 77.1734, 31.1048],
+  Uttarakhand: ["Dehradun", 78.0322, 30.3165],
+  "Jammu & Kashmir": ["Srinagar", 74.7973, 34.0837],
+  Ladakh: ["Leh", 77.577, 34.1526],
+  Assam: ["Dispur", 91.7898, 26.1445],
+  "Arunachal Pradesh": ["Itanagar", 93.6053, 27.0844],
+  Meghalaya: ["Shillong", 91.8933, 25.5788],
+  Nagaland: ["Kohima", 94.1086, 25.6751],
+  Manipur: ["Imphal", 93.9368, 24.817],
+  Mizoram: ["Aizawl", 92.7176, 23.7271],
+  Tripura: ["Agartala", 91.2868, 23.8315],
+  Sikkim: ["Gangtok", 88.6139, 27.3389],
+};
 
 /* =========================================================
-   ANDHRA PRADESH DESTINATIONS
-   ========================================================= */
+   AP DESTINATIONS
+========================================================= */
 
 const DESTINATIONS = [
   {
     name: "Tirupati",
+    district: "Tirupati",
     lat: 13.6288,
     lon: 79.4192,
+    image:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Tirumala%20Venkateswara%20Temple%2C%20Tirupati%20%2824338261275%29.jpg?width=1200",
     budget: "₹2,500 – ₹5,000",
-    food: "₹400 – ₹800",
-    travel: "₹500 – ₹1,500",
-    stay: "₹1,000 – ₹2,500",
-    visit: "1–2 Days",
-  },
-  {
-    name: "Srikalahasti",
-    lat: 13.7499,
-    lon: 79.6984,
-    budget: "₹1,500 – ₹3,000",
-    food: "₹300 – ₹600",
-    travel: "₹300 – ₹800",
-    stay: "₹700 – ₹1,500",
-    visit: "1 Day",
-  },
-  {
-    name: "Kanipakam",
-    lat: 13.2817,
-    lon: 79.1017,
-    budget: "₹1,500 – ₹3,000",
-    food: "₹300 – ₹600",
-    travel: "₹300 – ₹800",
-    stay: "₹700 – ₹1,500",
-    visit: "1 Day",
+    food: "Andhra meals, Tirupati laddu",
+    travel: "Bus / Train / Flight",
+    stay: "₹800 – ₹2,000 per night",
+    visit: "Sri Venkateswara Swamy Temple",
   },
   {
     name: "Amaravati",
-    lat: 16.572,
+    district: "Guntur",
+    lat: 16.573,
     lon: 80.3575,
+    image:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/AMARAVATHI%20STUPA%2002.jpg?width=1200",
     budget: "₹1,500 – ₹3,500",
-    food: "₹300 – ₹700",
-    travel: "₹300 – ₹900",
-    stay: "₹700 – ₹1,500",
-    visit: "1 Day",
+    food: "Andhra cuisine",
+    travel: "Bus / Car",
+    stay: "₹700 – ₹1,800 per night",
+    visit: "Amaravati Mahachaitya and Buddhist heritage",
   },
   {
     name: "Vijayawada",
+    district: "NTR",
     lat: 16.5062,
     lon: 80.648,
-    budget: "₹2,000 – ₹4,000",
-    food: "₹400 – ₹800",
-    travel: "₹400 – ₹1,000",
-    stay: "₹800 – ₹2,000",
-    visit: "1–2 Days",
-  },
-  {
-    name: "Undavalli Caves",
-    lat: 16.4955,
-    lon: 80.587,
-    budget: "₹1,000 – ₹2,500",
-    food: "₹250 – ₹500",
-    travel: "₹250 – ₹600",
-    stay: "₹500 – ₹1,200",
-    visit: "Half Day",
+    image:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Kanaka%20Durga%20Gopuram%2C%20Vijayawada.jpg?width=1200",
+    budget: "₹1,500 – ₹3,500",
+    food: "Andhra meals and sweets",
+    travel: "Train / Bus / Flight",
+    stay: "₹700 – ₹2,000 per night",
+    visit: "Kanaka Durga Temple and Krishna River",
   },
   {
     name: "Visakhapatnam",
+    district: "Visakhapatnam",
     lat: 17.6868,
     lon: 83.2185,
+    image:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Aerial%20View%20of%20Visakhapatnam.jpg?width=1200",
     budget: "₹3,000 – ₹6,000",
-    food: "₹500 – ₹1,000",
-    travel: "₹700 – ₹1,500",
-    stay: "₹1,200 – ₹3,000",
-    visit: "2–3 Days",
+    food: "Seafood and Andhra cuisine",
+    travel: "Train / Flight / Bus",
+    stay: "₹1,000 – ₹3,000 per night",
+    visit: "Coastal city and Bay of Bengal views",
   },
   {
     name: "Araku Valley",
+    district: "Alluri Sitharama Raju",
     lat: 18.3273,
-    lon: 82.8775,
-    budget: "₹3,000 – ₹6,000",
-    food: "₹500 – ₹1,000",
-    travel: "₹800 – ₹1,500",
-    stay: "₹1,000 – ₹2,500",
-    visit: "2 Days",
+    lon: 82.877,
+    image:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Araku%20valley.jpg?width=1200",
+    budget: "₹3,000 – ₹7,000",
+    food: "Tribal cuisine and Bamboo chicken",
+    travel: "Train / Car",
+    stay: "₹1,000 – ₹3,000 per night",
+    visit: "Valleys, coffee plantations and viewpoints",
   },
   {
     name: "Borra Caves",
-    lat: 18.2808,
-    lon: 83.046,
-    budget: "₹2,500 – ₹5,000",
-    food: "₹400 – ₹800",
-    travel: "₹600 – ₹1,200",
-    stay: "₹800 – ₹2,000",
-    visit: "1 Day",
-  },
-  {
-    name: "Lambasingi",
-    lat: 17.9867,
-    lon: 82.5327,
-    budget: "₹2,500 – ₹5,000",
-    food: "₹400 – ₹800",
-    travel: "₹700 – ₹1,500",
-    stay: "₹800 – ₹2,000",
-    visit: "1–2 Days",
-  },
-  {
-    name: "Kakinada",
-    lat: 16.9891,
-    lon: 82.2475,
+    district: "Alluri Sitharama Raju",
+    lat: 18.28,
+    lon: 83.041,
+    image:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Borra%20Caves.jpg?width=1200",
     budget: "₹2,000 – ₹4,000",
-    food: "₹400 – ₹800",
-    travel: "₹400 – ₹900",
-    stay: "₹800 – ₹1,800",
-    visit: "1–2 Days",
+    food: "Local Andhra food",
+    travel: "Train / Car",
+    stay: "₹800 – ₹2,000 per night",
+    visit: "Natural limestone cave formations",
   },
   {
     name: "Konaseema",
-    lat: 16.7,
+    district: "Dr. B. R. Ambedkar Konaseema",
+    lat: 16.65,
     lon: 81.95,
+    image:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Konaseema%20.jpg?width=1200",
     budget: "₹2,500 – ₹5,000",
-    food: "₹400 – ₹800",
-    travel: "₹500 – ₹1,200",
-    stay: "₹1,000 – ₹2,000",
-    visit: "2 Days",
-  },
-  {
-    name: "Lepakshi",
-    lat: 14.1219,
-    lon: 77.6075,
-    budget: "₹1,500 – ₹3,000",
-    food: "₹300 – ₹600",
-    travel: "₹400 – ₹900",
-    stay: "₹500 – ₹1,200",
-    visit: "1 Day",
+    food: "Traditional coastal Andhra food",
+    travel: "Car / Bus",
+    stay: "₹800 – ₹2,500 per night",
+    visit: "Godavari delta, coconut groves and backwaters",
   },
   {
     name: "Gandikota",
+    district: "YSR Kadapa",
     lat: 14.8147,
-    lon: 78.289,
-    budget: "₹2,000 – ₹4,500",
-    food: "₹400 – ₹800",
-    travel: "₹500 – ₹1,200",
-    stay: "₹800 – ₹1,800",
-    visit: "1–2 Days",
+    lon: 78.285,
+    image:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/Gandhikota.jpg?width=1200",
+    budget: "₹2,000 – ₹5,000",
+    food: "Local Andhra food",
+    travel: "Car / Bus",
+    stay: "₹800 – ₹2,500 per night",
+    visit: "Pennar gorge and Gandikota Fort",
   },
   {
-    name: "Mahanandi",
-    lat: 15.482,
-    lon: 78.596,
+    name: "Lepakshi",
+    district: "Sri Sathya Sai",
+    lat: 13.8022,
+    lon: 77.603,
+    image:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/LEPAKSHI%20TEMPLE.jpg?width=1200",
     budget: "₹1,500 – ₹3,000",
-    food: "₹300 – ₹600",
-    travel: "₹400 – ₹900",
-    stay: "₹600 – ₹1,500",
-    visit: "1 Day",
-  },
-  {
-    name: "Ahobilam",
-    lat: 15.135,
-    lon: 78.716,
-    budget: "₹2,000 – ₹4,000",
-    food: "₹300 – ₹700",
-    travel: "₹500 – ₹1,000",
-    stay: "₹700 – ₹1,500",
-    visit: "1–2 Days",
-  },
-  {
-    name: "Yaganti",
-    lat: 15.3765,
-    lon: 78.145,
-    budget: "₹1,500 – ₹3,000",
-    food: "₹300 – ₹600",
-    travel: "₹400 – ₹900",
-    stay: "₹600 – ₹1,500",
-    visit: "1 Day",
+    food: "South Indian meals",
+    travel: "Bus / Car",
+    stay: "₹600 – ₹1,500 per night",
+    visit: "Veerabhadra Temple and Nandi",
   },
   {
     name: "Srisailam",
+    district: "Nandyal",
     lat: 16.072,
     lon: 78.868,
-    budget: "₹2,000 – ₹4,500",
-    food: "₹400 – ₹800",
-    travel: "₹500 – ₹1,200",
-    stay: "₹800 – ₹2,000",
-    visit: "1–2 Days",
-  },
-  {
-    name: "Simhachalam",
-    lat: 17.765,
-    lon: 83.251,
-    budget: "₹1,500 – ₹3,000",
-    food: "₹300 – ₹600",
-    travel: "₹300 – ₹800",
-    stay: "₹700 – ₹1,500",
-    visit: "1 Day",
+    image:
+      "https://commons.wikimedia.org/wiki/Special:FilePath/SriSailam%20Temple.jpg?width=1200",
+    budget: "₹2,500 – ₹5,000",
+    food: "Andhra and South Indian meals",
+    travel: "Bus / Car",
+    stay: "₹800 – ₹2,500 per night",
+    visit: "Mallikarjuna Temple, hills and Krishna River",
   },
 ];
 
 /* =========================================================
-   GEOJSON HELPERS
-   ========================================================= */
+   MAP SETTINGS
+========================================================= */
 
-function getStateName(feature) {
+const INDIA_CENTER = {
+  lon: 82.5,
+  lat: 22.5,
+};
+
+const INDIA_SCALE = 0.22;
+
+const AP_CENTER = {
+  lon: 80.9,
+  lat: 15.6,
+};
+
+const AP_SCALE = 0.48;
+
+/* =========================================================
+   GEOJSON HELPERS
+========================================================= */
+
+function getFeatureName(feature) {
   return (
     feature?.properties?.ST_NM ||
     feature?.properties?.NAME_1 ||
@@ -284,77 +242,27 @@ function getStateName(feature) {
   );
 }
 
-function getCoordinates(feature) {
-  if (!feature?.geometry) return [];
-
-  const { type, coordinates } = feature.geometry;
-
-  if (type === "Polygon") {
-    return coordinates;
-  }
-
-  if (type === "MultiPolygon") {
-    return coordinates.flat(1);
-  }
-
-  return [];
+function projectPoint(lon, lat, center, scale) {
+  return [
+    (lon - center.lon) * scale,
+    (lat - center.lat) * scale,
+  ];
 }
 
-/*
-  IMPORTANT:
-  These functions only PROJECT the existing GeoJSON.
-  They DO NOT modify the actual India shape.
-*/
-
-function getBounds(features) {
-  let minLon = Infinity;
-  let maxLon = -Infinity;
-  let minLat = Infinity;
-  let maxLat = -Infinity;
-
-  features.forEach((feature) => {
-    const polygons = getCoordinates(feature);
-
-    polygons.forEach((polygon) => {
-      polygon.forEach(([lon, lat]) => {
-        minLon = Math.min(minLon, lon);
-        maxLon = Math.max(maxLon, lon);
-        minLat = Math.min(minLat, lat);
-        maxLat = Math.max(maxLat, lat);
-      });
-    });
-  });
-
-  return {
-    minLon,
-    maxLon,
-    minLat,
-    maxLat,
-    centerLon: (minLon + maxLon) / 2,
-    centerLat: (minLat + maxLat) / 2,
-  };
-}
-
-function projectPoint(lon, lat, bounds, width = 12) {
-  const lonRange = bounds.maxLon - bounds.minLon || 1;
-  const latRange = bounds.maxLat - bounds.minLat || 1;
-
-  const x = ((lon - bounds.centerLon) / lonRange) * width;
-
-  const height = width * (latRange / lonRange);
-
-  const y =
-    ((lat - bounds.centerLat) / latRange) *
-    height;
-
-  return [x, y];
-}
-
-function polygonToShape(polygon, bounds, width) {
+function createShapeFromRing(
+  ring,
+  center,
+  scale
+) {
   const shape = new THREE.Shape();
 
-  polygon.forEach(([lon, lat], index) => {
-    const [x, y] = projectPoint(lon, lat, bounds, width);
+  ring.forEach(([lon, lat], index) => {
+    const [x, y] = projectPoint(
+      lon,
+      lat,
+      center,
+      scale
+    );
 
     if (index === 0) {
       shape.moveTo(x, y);
@@ -363,210 +271,408 @@ function polygonToShape(polygon, bounds, width) {
     }
   });
 
-  shape.closePath();
-
   return shape;
 }
 
-/* =========================================================
-   INDIA STATE MESH
-   ========================================================= */
+function createShapesFromGeometry(
+  geometry,
+  center,
+  scale
+) {
+  if (!geometry) return [];
 
-function StateMesh({
-  feature,
-  bounds,
-  width,
-  color,
-  onClick,
-}) {
-  const shapes = useMemo(() => {
-    const polygons = getCoordinates(feature);
+  const shapes = [];
 
-    return polygons
-      .filter((polygon) => polygon.length > 2)
-      .map((polygon) =>
-        polygonToShape(polygon, bounds, width)
+  if (geometry.type === "Polygon") {
+    const coordinates =
+      geometry.coordinates;
+
+    if (!coordinates?.length) {
+      return [];
+    }
+
+    const shape =
+      createShapeFromRing(
+        coordinates[0],
+        center,
+        scale
       );
-  }, [feature, bounds, width]);
 
-  const stateName = getStateName(feature);
+    for (
+      let i = 1;
+      i < coordinates.length;
+      i++
+    ) {
+      const hole = new THREE.Path();
+
+      coordinates[i].forEach(
+        ([lon, lat], index) => {
+          const [x, y] =
+            projectPoint(
+              lon,
+              lat,
+              center,
+              scale
+            );
+
+          if (index === 0) {
+            hole.moveTo(x, y);
+          } else {
+            hole.lineTo(x, y);
+          }
+        }
+      );
+
+      shape.holes.push(hole);
+    }
+
+    shapes.push(shape);
+  }
+
+  if (
+    geometry.type ===
+    "MultiPolygon"
+  ) {
+    geometry.coordinates.forEach(
+      (polygon) => {
+        if (!polygon?.length) {
+          return;
+        }
+
+        const shape =
+          createShapeFromRing(
+            polygon[0],
+            center,
+            scale
+          );
+
+        for (
+          let i = 1;
+          i < polygon.length;
+          i++
+        ) {
+          const hole =
+            new THREE.Path();
+
+          polygon[i].forEach(
+            ([lon, lat], index) => {
+              const [x, y] =
+                projectPoint(
+                  lon,
+                  lat,
+                  center,
+                  scale
+                );
+
+              if (index === 0) {
+                hole.moveTo(x, y);
+              } else {
+                hole.lineTo(x, y);
+              }
+            }
+          );
+
+          shape.holes.push(hole);
+        }
+
+        shapes.push(shape);
+      }
+    );
+  }
+
+  return shapes;
+}
+
+/* =========================================================
+   STATE LABEL POSITIONS
+========================================================= */
+
+const STATE_LABEL_POSITIONS = {
+  "Jammu & Kashmir": [76.2, 34.2],
+  Ladakh: [77.5, 35.1],
+  "Himachal Pradesh": [77.1, 31.7],
+  Punjab: [75.8, 31.0],
+  Haryana: [76.1, 29.2],
+  Uttarakhand: [79.0, 30.2],
+  "Uttar Pradesh": [80.8, 27.2],
+  Rajasthan: [73.8, 27.0],
+  Gujarat: [71.6, 22.5],
+  "Madhya Pradesh": [78.5, 23.0],
+  Maharashtra: [75.5, 19.3],
+  Goa: [74.0, 15.3],
+  Karnataka: [76.0, 14.3],
+  Telangana: [79.2, 17.9],
+  "Andhra Pradesh": [80.5, 15.6],
+  Kerala: [76.1, 10.5],
+  "Tamil Nadu": [78.7, 11.0],
+  Bihar: [85.7, 25.6],
+  Jharkhand: [85.6, 23.5],
+  "West Bengal": [87.8, 23.8],
+  Odisha: [84.4, 20.5],
+  Chhattisgarh: [82.0, 21.5],
+  Sikkim: [88.4, 27.7],
+  Assam: [92.8, 26.0],
+  Meghalaya: [91.3, 25.5],
+  "Arunachal Pradesh": [94.0, 28.2],
+  Nagaland: [94.4, 26.0],
+  Manipur: [93.9, 24.8],
+  Mizoram: [92.8, 23.5],
+  Tripura: [91.5, 23.8],
+  Delhi: [77.1, 28.7],
+  "NCT of Delhi": [77.1, 28.7],
+};
+
+/* =========================================================
+   AP LABEL OFFSETS
+========================================================= */
+
+const AP_LABEL_OFFSETS = {
+  Tirupati: [0.30, -0.02],
+  Srisailam: [-0.34, 0.22],
+  Amaravati: [-0.42, 0.34],
+  Vijayawada: [0.42, -0.30],
+  Visakhapatnam: [0.46, 0.05],
+  "Araku Valley": [0.34, 0.34],
+  "Borra Caves": [-0.42, -0.24],
+  Gandikota: [-0.48, -0.08],
+  Lepakshi: [-0.44, 0.20],
+  Konaseema: [0.38, 0.22],
+};
+
+/* =========================================================
+   CAPITAL DOT
+========================================================= */
+
+function CapitalDot({
+  lon,
+  lat,
+  center,
+  scale,
+}) {
+  const [x, y] = projectPoint(
+    lon,
+    lat,
+    center,
+    scale
+  );
 
   return (
-    <group>
-      {shapes.map((shape, index) => (
-        <mesh
-          key={`${stateName}-${index}`}
-          rotation={[-Math.PI / 2, 0, 0]}
-          position={[0, 0.12, 0]}
-          onClick={(event) => {
-            event.stopPropagation();
-            onClick?.(stateName);
-          }}
-        >
-          <extrudeGeometry
-            args={[
-              shape,
-              {
-                depth: 0.28,
-                bevelEnabled: true,
-                bevelSegments: 2,
-                bevelSize: 0.035,
-                bevelThickness: 0.035,
-                curveSegments: 2,
-              },
-            ]}
-          />
+    <group position={[x, y, 0.48]}>
+      <mesh>
+        <circleGeometry
+          args={[0.095, 24]}
+        />
+        <meshBasicMaterial
+          color="#FFFFFF"
+        />
+      </mesh>
 
-          <meshStandardMaterial
-            color={color}
-            roughness={0.58}
-            metalness={0.08}
-          />
-        </mesh>
-      ))}
+      <mesh
+        position={[0, 0, 0.012]}
+      >
+        <circleGeometry
+          args={[0.062, 24]}
+        />
+        <meshBasicMaterial
+          color="#D8232A"
+        />
+      </mesh>
     </group>
   );
 }
 
 /* =========================================================
    STATE LABEL
-   ========================================================= */
+========================================================= */
 
 function StateLabel({
-  name,
-  lat,
-  lon,
-  bounds,
-  width,
+  stateName,
 }) {
+  const position =
+    STATE_LABEL_POSITIONS[
+      stateName
+    ];
+
+  if (!position) return null;
+
   const [x, y] = projectPoint(
-    lon,
-    lat,
-    bounds,
-    width
+    position[0],
+    position[1],
+    INDIA_CENTER,
+    INDIA_SCALE
   );
 
   return (
     <Html
-      position={[x, 0.5, y]}
+      position={[x, y, 0.52]}
       center
-      distanceFactor={7}
+      distanceFactor={10}
       style={{
         pointerEvents: "none",
-        whiteSpace: "nowrap",
-        userSelect: "none",
       }}
     >
       <div className="state-label">
-        {name.toUpperCase()}
+        {stateName}
       </div>
     </Html>
   );
 }
 
 /* =========================================================
-   CAPITAL DOT
-   ========================================================= */
+   INDIA STATE MESH
+========================================================= */
 
-function CapitalDot({
-  name,
-  lat,
-  lon,
-  bounds,
-  width,
+function StateMesh({
+  feature,
+  index,
+  onClick,
 }) {
-  const [x, y] = projectPoint(
-    lon,
-    lat,
-    bounds,
-    width
+  const stateName =
+    getFeatureName(feature);
+
+  const shapes = useMemo(
+    () =>
+      createShapesFromGeometry(
+        feature.geometry,
+        INDIA_CENTER,
+        INDIA_SCALE
+      ),
+    [feature]
   );
 
-  return (
-    <group position={[x, 0.48, y]}>
-      <mesh>
-        <circleGeometry args={[0.075, 20]} />
-        <meshBasicMaterial color="#FFFFFF" />
-      </mesh>
+  const geometry = useMemo(() => {
+    if (!shapes.length) {
+      return null;
+    }
 
-      <mesh position={[0, 0.01, 0]}>
-        <circleGeometry args={[0.045, 20]} />
-        <meshBasicMaterial color="#D8232A" />
-      </mesh>
-    </group>
+    return new THREE.ExtrudeGeometry(
+      shapes,
+      {
+        depth: 0.34,
+        bevelEnabled: true,
+        bevelSegments: 2,
+        bevelSize: 0.035,
+        bevelThickness: 0.04,
+        curveSegments: 2,
+      }
+    );
+  }, [shapes]);
+
+  if (!geometry) {
+    return null;
+  }
+
+  const color =
+    STATE_COLORS[stateName] ||
+    "#B8BABD";
+
+  return (
+    <mesh
+      key={`${stateName}-${index}`}
+      geometry={geometry}
+      castShadow
+      receiveShadow
+      onClick={(event) => {
+        event.stopPropagation();
+
+        if (
+          stateName
+            .toLowerCase()
+            .includes("andhra")
+        ) {
+          onClick?.(
+            "Andhra Pradesh"
+          );
+        }
+      }}
+    >
+      <meshStandardMaterial
+        color={color}
+        roughness={0.55}
+        metalness={0.08}
+      />
+    </mesh>
   );
 }
 
 /* =========================================================
    INDIA MAP
-   ========================================================= */
+========================================================= */
 
 function IndiaMap({
   geojson,
   onStateClick,
 }) {
-  const features = geojson?.features || [];
+  const features =
+    geojson?.features || [];
 
-  const bounds = useMemo(
-    () => getBounds(features),
-    [features]
-  );
-
-  /*
-    IMPORTANT:
-    width/height are ONLY projection values.
-    The GeoJSON itself remains untouched.
-  */
-  const width = 12;
+  const uniqueStateNames =
+    Array.from(
+      new Set(
+        features
+          .map(getFeatureName)
+          .filter(
+            (name) =>
+              name &&
+              name !== "Unknown"
+          )
+      )
+    );
 
   return (
-    <group>
-      {features.map((feature, index) => {
-        const name = getStateName(feature);
-
-        const color =
-          STATE_COLORS[name] || "#D8D8D8";
-
-        return (
+    <group
+      position={[1.0, -0.65, 0]}
+      scale={[1.1, 1.1, 1.1]}
+    >
+      {features.map(
+        (feature, index) => (
           <StateMesh
-            key={`${name}-${index}`}
+            key={`${getFeatureName(
+              feature
+            )}-${index}`}
             feature={feature}
-            bounds={bounds}
-            width={width}
-            color={color}
+            index={index}
             onClick={onStateClick}
           />
-        );
-      })}
+        )
+      )}
 
-      {/* STATE LABELS */}
-      {CAPITALS.map(
-        ([capital, lat, lon, state]) => {
-          const featureExists = features.some(
-            (feature) =>
-              getStateName(feature) === state
-          );
+      {uniqueStateNames.map(
+        (stateName) => (
+          <StateLabel
+            key={`state-label-${stateName}`}
+            stateName={stateName}
+          />
+        )
+      )}
 
-          if (!featureExists) return null;
+      {Object.entries(
+        CAPITALS
+      ).map(
+        ([
+          stateName,
+          [, lon, lat],
+        ]) => {
+          if (
+            !STATE_COLORS[
+              stateName
+            ]
+          ) {
+            return null;
+          }
 
           return (
-            <React.Fragment key={state}>
-              <StateLabel
-                name={state}
-                lat={lat}
-                lon={lon}
-                bounds={bounds}
-                width={width}
-              />
-
-              <CapitalDot
-                name={capital}
-                lat={lat}
-                lon={lon}
-                bounds={bounds}
-                width={width}
-              />
-            </React.Fragment>
+            <CapitalDot
+              key={`capital-${stateName}`}
+              lon={lon}
+              lat={lat}
+              center={
+                INDIA_CENTER
+              }
+              scale={
+                INDIA_SCALE
+              }
+            />
           );
         }
       )}
@@ -575,121 +681,174 @@ function IndiaMap({
 }
 
 /* =========================================================
-   AP DESTINATION PIN
-   ========================================================= */
+   DESTINATION PIN
+========================================================= */
 
 function DestinationPin({
   destination,
-  bounds,
-  width,
   onClick,
+  showLabel = true,
 }) {
   const [x, y] = projectPoint(
     destination.lon,
     destination.lat,
-    bounds,
-    width
+    AP_CENTER,
+    AP_SCALE
   );
+
+  const offset =
+    AP_LABEL_OFFSETS[
+      destination.name
+    ] || [0.25, 0.15];
 
   return (
     <group
-      position={[x, 0.72, y]}
+      position={[x, y, 0.58]}
       onClick={(event) => {
         event.stopPropagation();
         onClick(destination);
       }}
     >
-      {/* PIN STEM */}
-      <mesh position={[0, -0.08, 0]}>
-        <cylinderGeometry
-          args={[0.018, 0.018, 0.18, 8]}
-        />
-        <meshStandardMaterial
-          color="#D8232A"
-          roughness={0.4}
-        />
-      </mesh>
-
-      {/* PIN HEAD */}
       <mesh>
-        <sphereGeometry args={[0.075, 18, 18]} />
+        <sphereGeometry
+          args={[0.09, 20, 20]}
+        />
+
         <meshStandardMaterial
           color="#D8232A"
-          emissive="#4A0000"
-          emissiveIntensity={0.3}
+          roughness={0.3}
+          metalness={0.1}
         />
       </mesh>
 
-      <Html
-        position={[0.12, 0.02, 0]}
-        style={{
-          pointerEvents: "none",
-          whiteSpace: "nowrap",
-        }}
+      <mesh
+        position={[0, 0, -0.06]}
       >
-        <div className="destination-label">
-          {destination.name}
-        </div>
-      </Html>
+        <coneGeometry
+          args={[0.055, 0.17, 16]}
+        />
+
+        <meshStandardMaterial
+          color="#D8232A"
+        />
+      </mesh>
+
+      {showLabel && (
+        <Html
+          position={[
+            offset[0],
+            offset[1],
+            0,
+          ]}
+          center
+          distanceFactor={9}
+          style={{
+            pointerEvents: "none",
+          }}
+        >
+          <div className="destination-label">
+            {destination.name}
+          </div>
+        </Html>
+      )}
     </group>
   );
 }
 
 /* =========================================================
-   AP MAP
-   ========================================================= */
+   ANDHRA PRADESH MAP
+========================================================= */
 
-function AndhraPradeshMap({
+function AndhraMap({
   geojson,
   onDestinationClick,
+  selectedDestination,
 }) {
-  const features = geojson?.features || [];
-
-  const bounds = useMemo(
-    () => getBounds(features),
-    [features]
-  );
-
-  const width = 10;
+  const features =
+    geojson?.features || [];
 
   return (
-    <group>
-      {features.map((feature, index) => (
-        <StateMesh
-          key={`ap-${index}`}
-          feature={feature}
-          bounds={bounds}
-          width={width}
-          color="#F47395"
-        />
-      ))}
+    <group
+      position={[0.7, -0.35, 0]}
+      scale={[1.12, 1.12, 1.12]}
+    >
+      {features.map(
+        (feature, index) => {
+          const shapes =
+            createShapesFromGeometry(
+              feature.geometry,
+              AP_CENTER,
+              AP_SCALE
+            );
 
-      {DESTINATIONS.map((destination) => (
-        <DestinationPin
-          key={destination.name}
-          destination={destination}
-          bounds={bounds}
-          width={width}
-          onClick={onDestinationClick}
-        />
-      ))}
+          if (!shapes.length) {
+            return null;
+          }
+
+          const geometry =
+            new THREE.ExtrudeGeometry(
+              shapes,
+              {
+                depth: 0.36,
+                bevelEnabled: true,
+                bevelSegments: 2,
+                bevelSize: 0.035,
+                bevelThickness: 0.04,
+                curveSegments: 2,
+              }
+            );
+
+          return (
+            <mesh
+              key={index}
+              geometry={geometry}
+              castShadow
+              receiveShadow
+            >
+              <meshStandardMaterial
+                color="#F47395"
+                roughness={0.5}
+                metalness={0.08}
+              />
+            </mesh>
+          );
+        }
+      )}
+
+      {DESTINATIONS.map(
+        (destination) => (
+          <DestinationPin
+            key={destination.name}
+            destination={destination}
+            onClick={
+              onDestinationClick
+            }
+            showLabel={
+              !selectedDestination
+            }
+          />
+        )
+      )}
     </group>
   );
 }
 
 /* =========================================================
-   DESTINATION MODAL
-   ========================================================= */
+   DESTINATION DETAILS
+========================================================= */
 
 function DestinationDetails({
   destination,
   onClose,
 }) {
-  if (!destination) return null;
+  if (!destination) {
+    return null;
+  }
 
   return (
     <div className="destination-overlay">
-      <div className="destination-modal">
+      <div className="destination-card">
+
         <button
           className="close-button"
           onClick={onClose}
@@ -697,56 +856,94 @@ function DestinationDetails({
           ×
         </button>
 
-        <div className="destination-image-area">
-          <div className="destination-image-placeholder">
-            <div className="destination-image-icon">
-              📍
+        <img
+          src={destination.image}
+          alt={destination.name}
+          className="destination-image"
+        />
+
+        <div className="destination-content">
+
+          <span className="destination-eyebrow">
+            ANDHRA PRADESH • TRAVEL GUIDE
+          </span>
+
+          <h2>
+            {destination.name}
+          </h2>
+
+          <p className="destination-district">
+            {destination.district}
+          </p>
+
+          <div className="destination-info-grid">
+
+            <div>
+              <span>
+                💰 BUDGET
+              </span>
+
+              <strong>
+                {destination.budget}
+              </strong>
             </div>
 
             <div>
-              <strong>{destination.name}</strong>
+              <span>
+                🍛 FOOD
+              </span>
+
+              <strong>
+                {destination.food}
+              </strong>
             </div>
+
+            <div>
+              <span>
+                🚗 TRAVEL
+              </span>
+
+              <strong>
+                {destination.travel}
+              </strong>
+            </div>
+
+            <div>
+              <span>
+                🏨 STAY
+              </span>
+
+              <strong>
+                {destination.stay}
+              </strong>
+            </div>
+
           </div>
-        </div>
 
-        <div className="destination-info">
-          <div className="destination-kicker">
-            YATRA 360 • ANDHRA PRADESH
-          </div>
+          <div className="visit-box">
 
-          <h2>{destination.name}</h2>
+            <span>
+              📍 WHY VISIT
+            </span>
 
-          <div className="detail-list">
-            <div className="detail-row">
-              <span>💰 Budget</span>
-              <strong>{destination.budget}</strong>
-            </div>
+            <p>
+              {destination.visit}
+            </p>
 
-            <div className="detail-row">
-              <span>🍛 Food</span>
-              <strong>{destination.food}</strong>
-            </div>
-
-            <div className="detail-row">
-              <span>🚗 Travel</span>
-              <strong>{destination.travel}</strong>
-            </div>
-
-            <div className="detail-row">
-              <span>🏨 Stay</span>
-              <strong>{destination.stay}</strong>
-            </div>
-
-            <div className="detail-row">
-              <span>📅 Visit</span>
-              <strong>{destination.visit}</strong>
-            </div>
           </div>
 
           <div className="total-expense">
-            <span>Estimated total</span>
-            <strong>{destination.budget}</strong>
+
+            <span>
+              ESTIMATED TRIP EXPENSE
+            </span>
+
+            <strong>
+              {destination.budget}
+            </strong>
+
           </div>
+
         </div>
       </div>
     </div>
@@ -755,270 +952,318 @@ function DestinationDetails({
 
 /* =========================================================
    MAIN COMPONENT
-   ========================================================= */
+========================================================= */
 
 export default function India3D() {
-  const [india, setIndia] = useState(null);
-  const [andhraPradesh, setAndhraPradesh] =
+  const [indiaData, setIndiaData] =
     useState(null);
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
-
-  const [view, setView] = useState("india");
-  const [selectedDestination, setSelectedDestination] =
+  const [apData, setApData] =
     useState(null);
+
+  const [view, setView] =
+    useState("india");
+
+  const [
+    selectedDestination,
+    setSelectedDestination,
+  ] = useState(null);
+
+  /* =================================================
+     LOAD INDIA
+  ================================================= */
 
   useEffect(() => {
-    async function loadMaps() {
-      try {
-        setLoading(true);
-
-        const [
-          indiaResponse,
-          apResponse,
-        ] = await Promise.all([
-          fetch("/india.geojson"),
-          fetch("/andhra-pradesh.geojson"),
-        ]);
-
-        if (!indiaResponse.ok) {
+    fetch("/india.geojson")
+      .then((response) => {
+        if (!response.ok) {
           throw new Error(
-            "india.geojson could not be loaded"
+            "Could not load India GeoJSON"
           );
         }
 
-        if (!apResponse.ok) {
-          throw new Error(
-            "andhra-pradesh.geojson could not be loaded"
-          );
-        }
-
-        const indiaData =
-          await indiaResponse.json();
-
-        const apData =
-          await apResponse.json();
-
-        setIndia(indiaData);
-        setAndhraPradesh(apData);
-      } catch (err) {
-        console.error(err);
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadMaps();
+        return response.json();
+      })
+      .then(setIndiaData)
+      .catch(console.error);
   }, []);
 
-  function handleStateClick(stateName) {
-    if (
-      stateName === "Andhra Pradesh"
-    ) {
-      setView("ap");
-    }
-  }
+  /* =================================================
+     LOAD AP
+  ================================================= */
 
-  function goBackToIndia() {
+  useEffect(() => {
+    if (view !== "andhra") {
+      return;
+    }
+
+    fetch(
+      "/andhra-pradesh.geojson"
+    )
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(
+            "Could not load Andhra Pradesh GeoJSON"
+          );
+        }
+
+        return response.json();
+      })
+      .then(setApData)
+      .catch(console.error);
+  }, [view]);
+
+  /* =================================================
+     INDIA → AP
+  ================================================= */
+
+  const goToAndhra = () => {
+    setSelectedDestination(null);
+    setView("andhra");
+  };
+
+  /* =================================================
+     AP → INDIA
+  ================================================= */
+
+  const goBackToIndia = () => {
     setSelectedDestination(null);
     setView("india");
-  }
+  };
 
   return (
     <div className="yatra-root">
-      {/* HEADER */}
 
-      <div className="yatra-header">
-        <div className="yatra-logo">
-          YATRA <span>360°</span>
+      {/* =================================================
+          BRAND
+      ================================================= */}
+
+      <header className="yatra-heading">
+
+        <div className="eyebrow">
+          EXPLORE • DISCOVER • EXPERIENCE
         </div>
 
-        {view === "ap" && (
-          <button
-            className="back-button"
-            onClick={goBackToIndia}
-          >
-            ← INDIA
-          </button>
-        )}
+        <h1>
+          𝓨𝓪𝓽𝓻𝓪 360
+        </h1>
+
+        <p>
+          Discover India.
+          <br />
+          One journey at a time.
+        </p>
+
+      </header>
+
+      {/* =================================================
+          BACK BUTTON
+      ================================================= */}
+
+      {view === "andhra" && (
+        <button
+          className="back-button"
+          onClick={
+            goBackToIndia
+          }
+        >
+          ← BACK TO INDIA
+        </button>
+      )}
+
+      {/* =================================================
+          3D CANVAS
+      ================================================= */}
+
+      <Canvas
+        shadows
+        camera={{
+          position: [
+            0,
+            -1.1,
+            18,
+          ],
+          fov: 42,
+          near: 0.1,
+          far: 1000,
+        }}
+        gl={{
+          antialias: true,
+          alpha: true,
+        }}
+      >
+
+        <fog
+          attach="fog"
+          args={[
+            "#DFF5F9",
+            24,
+            50,
+          ]}
+        />
+
+        {/* LIGHTING */}
+
+        <ambientLight
+          intensity={1.35}
+        />
+
+        <directionalLight
+          position={[
+            8,
+            12,
+            16,
+          ]}
+          intensity={2.5}
+          castShadow
+        />
+
+        <directionalLight
+          position={[
+            -10,
+            4,
+            10,
+          ]}
+          intensity={1.2}
+        />
+
+        <pointLight
+          position={[
+            0,
+            0,
+            12,
+          ]}
+          intensity={0.8}
+        />
+
+        {/* INDIA */}
+
+        {view === "india" &&
+          indiaData && (
+            <IndiaMap
+              geojson={indiaData}
+              onStateClick={
+                goToAndhra
+              }
+            />
+          )}
+
+        {/* ANDHRA PRADESH */}
+
+        {view === "andhra" &&
+          apData && (
+            <AndhraMap
+              geojson={apData}
+              onDestinationClick={
+                setSelectedDestination
+              }
+              selectedDestination={
+                selectedDestination
+              }
+            />
+          )}
+
+        {/* =================================================
+            ROTATE + ZOOM
+        ================================================= */}
+
+        <OrbitControls
+          makeDefault
+          enableRotate={true}
+          enableZoom={true}
+          enablePan={false}
+          enableDamping={true}
+          dampingFactor={0.08}
+          rotateSpeed={1.15}
+          zoomSpeed={0.85}
+          minDistance={
+            view === "india"
+              ? 8
+              : 7
+          }
+          maxDistance={
+            view === "india"
+              ? 32
+              : 28
+          }
+          minPolarAngle={0.35}
+          maxPolarAngle={2.75}
+          target={[0, 0, 0]}
+        />
+
+      </Canvas>
+
+      {/* =================================================
+          OCEAN
+      ================================================= */}
+
+      <div className="ocean-layer">
+
+        <div className="ocean-name ocean-indian">
+          INDIAN OCEAN
+        </div>
+
+        <div className="ocean-name ocean-bay">
+          BAY OF BENGAL
+        </div>
+
+        <div className="ocean-wave wave-one" />
+        <div className="ocean-wave wave-two" />
+        <div className="ocean-wave wave-three" />
+
       </div>
 
-      {/* HERO */}
+      {/* =================================================
+          MAP HINT
+      ================================================= */}
 
       {view === "india" && (
-        <div className="yatra-heading">
-          <div className="eyebrow">
-            EXPLORE INDIA
-          </div>
+        <div className="map-hint">
 
-          <h1>
-            Discover India
-            <br />
-            <span>in 360°</span>
-          </h1>
+          <span>
+            3D INDIA
+          </span>
 
           <p>
-            Drag to rotate • Scroll to zoom •
-            Click a state
+            Drag to rotate • Scroll
+            to zoom • Click Andhra
+            Pradesh
           </p>
+
         </div>
       )}
 
-      {view === "ap" && (
-        <div className="yatra-heading ap-heading">
-          <div className="eyebrow">
+      {view === "andhra" && (
+        <div className="map-hint">
+
+          <span>
             ANDHRA PRADESH
-          </div>
-
-          <h1>
-            Explore Andhra
-            <br />
-            <span>in 360°</span>
-          </h1>
+          </span>
 
           <p>
-            Select a destination to discover
-            more
+            Drag to rotate • Scroll
+            to zoom • Select a
+            destination
           </p>
+
         </div>
       )}
 
-      {/* MAP */}
-
-      <div className="map-container">
-        {loading && (
-          <div className="map-status">
-            Loading YATRA 360...
-          </div>
-        )}
-
-        {error && (
-          <div className="map-status error">
-            {error}
-          </div>
-        )}
-
-        {!loading && !error && (
-          <Canvas
-            camera={{
-              position: [0, 7.8, 10.5],
-              fov: 42,
-              near: 0.1,
-              far: 1000,
-            }}
-            dpr={[1, 2]}
-          >
-            {/* DEEP TRAVEL BACKGROUND */}
-
-            <color
-              attach="background"
-              args={["#071522"]}
-            />
-
-            <fog
-              attach="fog"
-              args={["#071522", 18, 42]}
-            />
-
-            {/* LIGHTING */}
-
-            <ambientLight intensity={2.2} />
-
-            <directionalLight
-              position={[5, 10, 6]}
-              intensity={4}
-            />
-
-            <directionalLight
-              position={[-6, 5, -4]}
-              intensity={2}
-            />
-
-            <pointLight
-              position={[0, 5, 0]}
-              intensity={2}
-            />
-
-            {/* MAP */}
-
-            <group
-              rotation={[
-                -0.16,
-                0.18,
-                0,
-              ]}
-            >
-              {view === "india" ? (
-                <IndiaMap
-                  geojson={india}
-                  onStateClick={
-                    handleStateClick
-                  }
-                />
-              ) : (
-                <AndhraPradeshMap
-                  geojson={andhraPradesh}
-                  onDestinationClick={
-                    setSelectedDestination
-                  }
-                />
-              )}
-            </group>
-
-            {/* GROUND SHADOW */}
-
-            <mesh
-              rotation={[
-                -Math.PI / 2,
-                0,
-                0,
-              ]}
-              position={[0, -0.18, 0]}
-            >
-              <planeGeometry
-                args={[35, 35]}
-              />
-
-              <shadowMaterial
-                opacity={0.18}
-              />
-            </mesh>
-
-            {/* CONTROLS */}
-
-            <OrbitControls
-              enablePan={false}
-              enableZoom={true}
-              enableRotate={true}
-              minDistance={7}
-              maxDistance={22}
-              dampingFactor={0.08}
-              enableDamping
-            />
-          </Canvas>
-        )}
-      </div>
-
-      {/* DESTINATION DETAILS */}
+      {/* =================================================
+          DESTINATION DETAILS
+      ================================================= */}
 
       <DestinationDetails
-        destination={selectedDestination}
+        destination={
+          selectedDestination
+        }
         onClose={() =>
-          setSelectedDestination(null)
+          setSelectedDestination(
+            null
+          )
         }
       />
 
-      {/* BOTTOM HINT */}
-
-      {!selectedDestination && (
-        <div className="map-hint">
-          {view === "india"
-            ? "DRAG • ROTATE • ZOOM • SELECT A STATE"
-            : "DRAG • ROTATE • ZOOM • SELECT A DESTINATION"}
-        </div>
-      )}
     </div>
   );
 }
